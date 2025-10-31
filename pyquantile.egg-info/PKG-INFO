@@ -1,0 +1,60 @@
+Metadata-Version: 2.4
+Name: pyquantile
+Version: 0.1.0
+Summary: A fast quantile estimator for streamed data without any data points having to be stored.
+Author: Your Name
+License: MIT
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: numpy
+Requires-Dist: pybind11
+Dynamic: author
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: license
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# PyQuantile
+
+PyQuantile is a Python library that provides a fast quantile estimator for streamed data without storing any data points. It is implemented in C++ and exposed to Python using pybind11.
+
+## Installation
+
+You can install PyQuantile via pip:
+pip install pyquantile
+## Usage
+
+Here’s an example of how to use PyQuantile:
+import pyquantile
+
+# Create a quantile estimator for the 50th percentile (median)
+estimator = pyquantile.QuantileEstimator(0.5)
+
+# Add data points to the stream
+estimator.add(10)
+estimator.add(20)
+estimator.add(30)
+
+## Features
+
+- **Streaming Data**: Estimate quantiles without storing the entire dataset.
+- **Fast and Lightweight**: Implemented in C++ for high performance.
+- **Python Integration**: Exposed to Python using pybind11.
+
+## Development
+
+To build and install the library locally, clone the repository and run:
+git clone https://github.com/richardsmythe/pyquantile.git
+cd pyquantile
+pip install .
+
+## Contributing
+
+Contributions are welcome! If you’d like to contribute, please fork the repository and submit a pull request.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+

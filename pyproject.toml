@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools", "wheel", "pybind11"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyquantile"
+version = "0.1.0"
+description = "A fast quantile estimator for streamed data. Produces a quantile estimate without storing any data points."
+authors = [
+    { name = "Richard Smythe" }
+]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = ["numpy", "pybind11"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.setuptools]
+zip-safe = false
