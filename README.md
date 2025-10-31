@@ -53,6 +53,9 @@ git clone https://github.com/richardsmythe/pyquantile.git
 cd pyquantile
 pip install .
 
+## Demo
+A python file named `test_pyquantile.py` is included. This file demonstrates pyquantile in action and plots the results against the exact quantile. Run it with `python .\test_pyquantile.py`. This simple script will show how pyquantile performs against an exact quantile. With more data the absolute errors begin to even out the estimator becomes more accurate.
+
 ## Contributing
 
 Contributions are welcome! If you would like to contribute, please fork the repository and submit a pull request.
