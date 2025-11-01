@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyquantile"
-version = "0.1.0"
+version = "0.1.8"  # Updated to match setup.py
 description = "A fast quantile estimator for streamed data. Produces a quantile estimate without storing any data points."
 authors = [
     { name = "Richard Smythe" }

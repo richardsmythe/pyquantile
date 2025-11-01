@@ -4,7 +4,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pyquantile, m) {
+PYBIND11_MODULE(_pyquantile, m) {  // Changed to match setup.py
     m.doc() = "A fast C++ P-Square quantile estimator for streaming data.";
 
     // Expose the QuantileEstimator class and its methods

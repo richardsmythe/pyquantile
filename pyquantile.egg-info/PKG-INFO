@@ -1,47 +1,64 @@
 Metadata-Version: 2.4
 Name: pyquantile
-Version: 0.1.0
-Summary: A fast quantile estimator for streamed data without any data points having to be stored.
-Author: Your Name
-License: MIT
+Version: 0.1.8
+Summary: A fast quantile estimator for streamed data. Produces a quantile estimate without storing any data points.
+Author: Richard Smythe
+License-Expression: MIT
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
+License-File: LICENSE
 Requires-Dist: numpy
 Requires-Dist: pybind11
-Dynamic: author
-Dynamic: description
-Dynamic: description-content-type
-Dynamic: license
-Dynamic: requires-dist
+Dynamic: license-file
 Dynamic: requires-python
-Dynamic: summary
 
 # PyQuantile
 
-PyQuantile is a Python library that provides a fast quantile estimator for streamed data without storing any data points. It is implemented in C++ and exposed to Python using pybind11.
+PyQuantile is a Python library that provides a fast quantile estimator for streamed data without storing any data points.
 
 ## Installation
 
 You can install PyQuantile via pip:
 pip install pyquantile
+
 ## Usage
 
-Here’s an example of how to use PyQuantile:
+Here is an example of how to use PyQuantile:
 import pyquantile
 
-# Create a quantile estimator for the 50th percentile (median)
-estimator = pyquantile.QuantileEstimator(0.5)
+### Create a quantile estimator for the 75th percentile
+estimator = pyquantile.QuantileEstimator(0.75)
 
-# Add data points to the stream
+### Add data points to the stream
 estimator.add(10)
 estimator.add(20)
 estimator.add(30)
+etc...
 
-## Features
+.add() can be called in a loop for streaming data, and .quantile() can be called at any time to get the latest estimate.
 
-- **Streaming Data**: Estimate quantiles without storing the entire dataset.
-- **Fast and Lightweight**: Implemented in C++ for high performance.
-- **Python Integration**: Exposed to Python using pybind11.
+### Get current estimate
+current_estimate = estimator.quantile()
+
+## Streaming Integration Example
+
+You can use PyQuantile in real-time streaming scenarios. For example, to process data from a Kafka topic:
+
+```python
+from pyquantile import QuantileEstimator
+from kafka import KafkaConsumer
+import json
+
+estimator = QuantileEstimator(0.75)
+consumer = KafkaConsumer('my_topic', bootstrap_servers='localhost:9092')
+
+for message in consumer:
+	data_point = float(json.loads(message.value))
+	estimator.add(data_point)
+	print("Current estimate:", estimator.quantile())
+```
+
+You can adapt this pattern for other streaming services (RabbitMQ, AWS Kinesis, etc.) by feeding each incoming data point to `estimator.add()`.
 
 ## Development
 
@@ -52,7 +69,7 @@ pip install .
 
 ## Contributing
 
-Contributions are welcome! If you’d like to contribute, please fork the repository and submit a pull request.
+Contributions are welcome! If you would like to contribute, please fork the repository and submit a pull request.
 
 ## License
 

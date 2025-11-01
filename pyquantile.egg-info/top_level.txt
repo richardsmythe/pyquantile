@@ -1,1 +1,6 @@
+_pyquantile
+_skbuild
+dist
+packages
 pyquantile
+x64

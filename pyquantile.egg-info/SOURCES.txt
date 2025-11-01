@@ -1,9 +1,12 @@
+LICENSE
+MANIFEST.in
 README.md
-py_quantile_estimator.cpp
 pyproject.toml
-quantile-estimator.cpp
 setup.py
 pyquantile/__init__.py
+pyquantile/py_quantile_estimator.cpp
+pyquantile/quantile-estimator.cpp
+pyquantile/quantile-estimator.h
 pyquantile.egg-info/PKG-INFO
 pyquantile.egg-info/SOURCES.txt
 pyquantile.egg-info/dependency_links.txt
