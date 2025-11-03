@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pyquantile import QuantileEstimator
 
-# simulate a stream of data for 60 seconds and plot accuracy of quantile estimates over time
+# simulate a stream of data for 90 seconds and plot accuracy of quantile estimates over time
 duration_seconds = 90
 quantile = 0.75
 stream = []
