@@ -1,6 +1,6 @@
 # PyQuantile
 
-PyQuantile is a Python library that provides a fast quantile estimator for streamed data without storing any data points.
+PyQuantile is a Python library that provides a fast quantile estimator for streamed data. It dynamically estimates the p-th quantile of a stream of incoming data points without storing them. Based on p-Squared algorithm for adjusting and updating markers.
 
 ## Installation
 
@@ -8,25 +8,55 @@ You can install PyQuantile via pip:
 pip install pyquantile
 
 ## Usage
+Using PyQuantile is simple. Here is an example of how to import it and add samples to an estimator:
 
-Here is an example of how to use PyQuantile:
-import pyquantile
-
-### Create a quantile estimator for the 75th percentile
-estimator = pyquantile.QuantileEstimator(0.75)
-
-### Add data points to the stream
+```python
+import pyquantile as pq
+estimator = pq.QuantileEstimator(0.75)
+```
+### Samples are added to an estimator like this:
+```python
 estimator.add(10)
 estimator.add(20)
 estimator.add(30)
-etc...
+```
+We can add samples via a loop, and `.quantile()` can be called at any time to get the latest estimate. The following code will simulate a stream of data for 60 seconds and plot accuracy of quantile estimates over time:
+```python
+duration_seconds = 60
+quantile = 0.75
+stream = []
+estimator = pq.QuantileEstimator(quantile)
+accuracies = []
+estimates = []
+true_quantiles = []
+timestamps = []
 
-.add() can be called in a loop for streaming data, and .quantile() can be called at any time to get the latest estimate.
+start = time.time()
+while time.time() - start < duration_seconds:
+    x = np.random.normal(loc=0, scale=1)
+    stream.append(x)
+    estimator.add(x)
+    current_estimate = estimator.quantile()
+    current_true = np.quantile(stream, quantile)
+    accuracy = abs(current_estimate - current_true)
+    estimates.append(current_estimate)
+    true_quantiles.append(current_true)
+    accuracies.append(accuracy)
+    timestamps.append(time.time() - start)
+    time.sleep(0.01)
 
-### Get current estimate
-current_estimate = estimator.quantile()
+plt.figure(figsize=(10, 6))
+plt.plot(timestamps, estimates, label=f'Estimated {quantile} Quantile')
+plt.plot(timestamps, true_quantiles, label=f'True {quantile} Quantile')
+plt.plot(timestamps, accuracies, label='Absolute Error', color='green')
+plt.xlabel('Time (s)')
+plt.ylabel('Value')
+plt.title('Quantile Estimation Accuracy Over Time')
+plt.legend()
+plt.show()
+```
 
-## Streaming Integration Example
+## Kafka Integration Example
 
 You can use PyQuantile in real-time streaming scenarios. For example, to process data from a Kafka topic:
 
