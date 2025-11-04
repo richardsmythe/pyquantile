@@ -1,32 +1,98 @@
 # PyQuantile
 
-PyQuantile is a Python library that provides a fast quantile estimator for streamed data without storing any data points.
+PyQuantile is a Python library that provides a fast quantile estimator for streamed data. It dynamically estimates the p-th quantile of a stream of incoming data points without storing them. Based on p-Squared algorithm for adjusting and updating markers. This project is a work in progress.
+
+PyQuantile demonstrates good performance characteristics for streaming quantile estimation. Memory usage remains constant (O(1)) regardless of data volume, using only about 2 MiB of base memory with no growth even after processing millions of values. Processing speed is impressive at 1.2-2.0 million values per second with consistent sub-millisecond latency (0.001-0.002ms per operation).
+
+Accuracy varies by distribution type and quantile level, for example lower quantiles (0.25, 0.75) show strong accuracy (7-23% error), while extreme quantiles (0.90-0.99) require more tolerance, especially for skewed distributions. Testing across different distributions shows best performance with bounded distributions like Beta (2.8% error) and uniform distributions, good performance with normal distributions (13% error), and acceptable performance with heavy-tailed distributions like Pareto (19% error). These error rates are well within theoretical tolerances (25-35% * sqrt(n)/log(n)) and are impressive for a streaming algorithm that maintains constant memory usage while providing real-time updates without storing historical data.
+
+- Small initial memory allocation (~2 MiB)
+- Handles millions of values with minimal memory impact
+- Memory usage is O(1) - constant space complexity
+- Perfect for long-running applications or large data streams
+- No memory leaking, memory does not grow over time
+- No memory accumulation with more data
+  
+## Performance
+- Initial memory allocation only ~2.0 MiB, which is a one-time cost
+- Different quantile values (0.25 to 0.99) uses the same memory
+- Processing 100 values: No additional memory
+- Processing 1,000 values: No additional memory
+- Processing 10,000 values: No additional memory
+- Processing 100,000 values: No additional memory
+- Processing 1,000,000 values: Only 0.13 MiB increase
+
+The graph below shows how PyQuantile actually gets more efficient with larger data sizes. Peak performance reaches about 2 million values per second at the largest data size. The latency is generally very stable regardless of the data size.
+<img width="1190" height="488" alt="image" src="https://github.com/user-attachments/assets/46f97a5f-7e44-41fb-bd25-c8c82a417536" />
+
+Accuracy will always fluctuate for streaming algorithms. These are estimates based on changing data with no known size, and accuracy depends heavily on the characteristics of the data. In my tests, the best results tend to be with uniform and beta distributions. Individual quantiles also show varying accuracy with best results up to 0.75. 
+
+<img width="1489" height="989" alt="all_quantiles_comparison" src="https://github.com/user-attachments/assets/1ea25998-1e54-44fa-a15c-2c88525807a3" />
+
+Generally, all estimates seem to stabilize after the initial few seconds. The plot below compares Beta, Normal and Pareto distributions. Predictably a heavy tailed distribution like Pareto has more error than the others. 
+
+<img width="3570" height="2066" alt="image" src="https://github.com/user-attachments/assets/de962d76-4302-4458-93f1-5664161777c0" />
+
+- Beta's error is ~2.8% of the true value
+- Normal's error is ~13% of the true value
+- Pareto's error is ~19% of the true value
 
 ## Installation
 
 You can install PyQuantile via pip:
-pip install pyquantile
+
+`pip install pyquantile`
 
 ## Usage
+Using PyQuantile is simple. Here is an example of how to import it and add samples to an estimator:
 
-Here is an example of how to use PyQuantile:
-import pyquantile
-
-### Create a quantile estimator for the 75th percentile
-estimator = pyquantile.QuantileEstimator(0.75)
-
-### Add data points to the stream
+```python
+import pyquantile as pq
+estimator = pq.QuantileEstimator(0.75)
+```
+### Samples are added to an estimator like this:
+```python
 estimator.add(10)
 estimator.add(20)
 estimator.add(30)
-etc...
+```
+We can add samples via a loop, and `.quantile()` can be called at any time to get the latest estimate. The following code will simulate a stream of data for 60 seconds and plot accuracy of quantile estimates over time:
+```python
+duration_seconds = 60
+quantile = 0.75
+stream = []
+estimator = pq.QuantileEstimator(quantile)
+accuracies = []
+estimates = []
+true_quantiles = []
+timestamps = []
 
-.add() can be called in a loop for streaming data, and .quantile() can be called at any time to get the latest estimate.
+start = time.time()
+while time.time() - start < duration_seconds:
+    x = np.random.normal(loc=0, scale=1)
+    stream.append(x)
+    estimator.add(x)
+    current_estimate = estimator.quantile()
+    current_true = np.quantile(stream, quantile)
+    accuracy = abs(current_estimate - current_true)
+    estimates.append(current_estimate)
+    true_quantiles.append(current_true)
+    accuracies.append(accuracy)
+    timestamps.append(time.time() - start)
+    time.sleep(0.01)
 
-### Get current estimate
-current_estimate = estimator.quantile()
+plt.figure(figsize=(10, 6))
+plt.plot(timestamps, estimates, label=f'Estimated {quantile} Quantile')
+plt.plot(timestamps, true_quantiles, label=f'True {quantile} Quantile')
+plt.plot(timestamps, accuracies, label='Absolute Error', color='green')
+plt.xlabel('Time (s)')
+plt.ylabel('Value')
+plt.title('Quantile Estimation Accuracy Over Time')
+plt.legend()
+plt.show()
+```
 
-## Streaming Integration Example
+## Kafka Integration Example
 
 You can use PyQuantile in real-time streaming scenarios. For example, to process data from a Kafka topic:
 
