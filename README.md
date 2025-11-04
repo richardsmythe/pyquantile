@@ -2,6 +2,8 @@
 
 PyQuantile is a Python library that provides a fast quantile estimator for streamed data. It dynamically estimates the p-th quantile of a stream of incoming data points without storing them. Based on p-Squared algorithm for adjusting and updating markers. This project is a work in progress.
 
+PyQuantile demonstrates good performance characteristics for streaming quantile estimation. Memory usage remains constant (O(1)) regardless of data volume, using only about 2 MiB of base memory with no growth even after processing millions of values. Processing speed is impressive at 1.2-2.0 million values per second with consistent sub-millisecond latency (0.001-0.002ms per operation). Accuracy varies by distribution type and quantile level, for example lower quantiles (0.25, 0.75) show strong accuracy (7-23% error), while extreme quantiles (0.90-0.99) require more tolerance, especially for skewed distributions. Testing across different distributions shows best performance with bounded distributions like Beta (2.8% error) and uniform distributions, good performance with normal distributions (13% error), and acceptable performance with heavy-tailed distributions like Pareto (19% error). These error rates are well within theoretical tolerances (25-35% * sqrt(n)/log(n)) and are impressive for a streaming algorithm that maintains constant memory usage while providing real-time updates without storing historical data.
+
 - Small initial memory allocation (~2 MiB)
 - Handles millions of values with minimal memory impact
 - Memory usage is O(1) - constant space complexity
@@ -21,13 +23,17 @@ PyQuantile is a Python library that provides a fast quantile estimator for strea
 The graph below shows how PyQuantile actually gets more efficient with larger data sizes. Peak performance reaches about 2 million values per second at the largest data size. The latency is generally very stable regardless of the data size.
 <img width="1190" height="488" alt="image" src="https://github.com/user-attachments/assets/46f97a5f-7e44-41fb-bd25-c8c82a417536" />
 
-Accuracy will always fluctuate for streaming algorithms. These are estimates based on changing data with no known size, and accuracy depends heavily on the characteristics of the data. In my tests, the best results tend to be with uniform and beta distributions. Individual quantiles also show varying accuracy with best results up to 0.75. After this it can struggle.
+Accuracy will always fluctuate for streaming algorithms. These are estimates based on changing data with no known size, and accuracy depends heavily on the characteristics of the data. In my tests, the best results tend to be with uniform and beta distributions. Individual quantiles also show varying accuracy with best results up to 0.75. 
 
 <img width="1489" height="989" alt="all_quantiles_comparison" src="https://github.com/user-attachments/assets/1ea25998-1e54-44fa-a15c-2c88525807a3" />
 
-- Generally, all estimates stabilize after the initial few seconds
-- Lower quantiles (≤0.75) are more accurate
-- The algorithm maintains consistent behavior
+Generally, all estimates seem to stabilize after the initial few seconds. The plot below compares Beta, Normal and Pareto distributions. Predictably a heavy tailed distribution like Pareto has more error than the others. 
+
+<img width="3570" height="2066" alt="image" src="https://github.com/user-attachments/assets/de962d76-4302-4458-93f1-5664161777c0" />
+
+- Beta's error is ~2.8% of the true value
+- Normal's error is ~13% of the true value
+- Pareto's error is ~19% of the true value
 
 ## Installation
 
