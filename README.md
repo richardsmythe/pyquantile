@@ -1,6 +1,6 @@
 # PyQuantile
 
-PyQuantile is a Python library that provides a fast quantile estimator for streamed data. It dynamically estimates the p-th quantile of a stream of incoming data points without storing them. Based on p-Squared algorithm for adjusting and updating markers. This is a work in progress and has some issues that need addressing.
+PyQuantile is a Python library that provides a fast quantile estimator for streamed data. It dynamically estimates the p-th quantile of a stream of incoming data points without storing them. Based on p-Squared algorithm for adjusting and updating markers. This project is a work in progress.
 
 - Small initial memory allocation (~2 MiB)
 - Handles millions of values with minimal memory impact
@@ -21,19 +21,13 @@ PyQuantile is a Python library that provides a fast quantile estimator for strea
 The graph below shows how PyQuantile actually gets more efficient with larger data sizes. Peak performance reaches about 2 million values per second at the largest data size. The latency is generally very stable regardless of the data size.
 <img width="1190" height="488" alt="image" src="https://github.com/user-attachments/assets/46f97a5f-7e44-41fb-bd25-c8c82a417536" />
 
-Accuracy will always fluctuate for streaming algorithms. These are estimates based on changing data with no known size, and accuracy depends heavily on the characteristics of the data. In my tests, the best results tend to be with uniform and beta distributions. Individual quantiles also show varying accuracy:
+Accuracy will always fluctuate for streaming algorithms. These are estimates based on changing data with no known size, and accuracy depends heavily on the characteristics of the data. In my tests, the best results tend to be with uniform and beta distributions. Individual quantiles also show varying accuracy with best results up to 0.75. After this it can struggle.
 
-- 0.25 quantile: Good (7–23% error)
-- 0.50 quantile: Varies dramatically by distribution
-- 0.75 quantile: Good (8–23% error)
-- Upper quantiles (0.90, 0.95, 0.99): Struggles somewhat, especially with skewed or multi-modal data
+<img width="1489" height="989" alt="all_quantiles_comparison" src="https://github.com/user-attachments/assets/1ea25998-1e54-44fa-a15c-2c88525807a3" />
 
-This means PyQuantile is most reliable for quartiles in well-behaved distributions, but accuracy can drop for extreme quantiles or complex data shapes.
-
-Below is a plot that shows that at the start, the error is high because the estimator has seen very little data.
-As more data arrives, both the estimated and true quantiles stabilize, and the error decreases.
-Over time, the estimator tracks the true quantile reasonably well, but there is always some error due to the streaming/approximate nature of the algorithm.
-<img width="871" height="559" alt="image" src="https://github.com/user-attachments/assets/237a232d-ada4-4b52-8f45-69d539c94ea5" />
+- Generally, all estimates stabilize after the initial few seconds
+- Lower quantiles (≤0.75) are more accurate
+- The algorithm maintains consistent behavior
 
 ## Installation
 
