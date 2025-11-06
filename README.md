@@ -8,6 +8,8 @@ Accuracy varies by distribution type and quantile level, for example lower quant
 
 **Comparison between PyQuantile and T-Digest streaming library:**
 
+With quantiles 0.25 to 0.99 and chunks 100,1000,10000.
+
 Performance:
 
 - PyQuantile 0.1.9 maintains excellent speed performance, consistently running in ~3-4ms across all distributions
@@ -41,10 +43,6 @@ Accuracy will always fluctuate for streaming algorithms. These are estimates bas
 Generally, all estimates seem to stabilize after the initial few seconds. The plot below compares Beta, Normal and Pareto distributions. Predictably a heavy tailed distribution like Pareto has more error than the others. 
 
 <img width="3570" height="2066" alt="image" src="https://github.com/user-attachments/assets/de962d76-4302-4458-93f1-5664161777c0" />
-
-- Beta's error is ~2.8% of the true value
-- Normal's error is ~13% of the true value
-- Pareto's error is ~19% of the true value
 
 ## Installation
 
