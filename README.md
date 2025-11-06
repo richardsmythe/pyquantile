@@ -4,7 +4,7 @@ PyQuantile is a Python library that provides a fast quantile estimator for strea
 
 PyQuantile demonstrates good performance characteristics for streaming quantile estimation. Memory usage remains constant (O(1)) regardless of data volume, using only about 2 MiB of base memory with no growth even after processing millions of values. Processing speed is impressive at 1.2-2.0 million values per second with consistent sub-millisecond latency (0.001-0.002ms per operation).
 
-Accuracy varies by distribution type and quantile level, for example lower quantiles (0.25, 0.75) show strong accuracy, while extreme quantiles (0.90-0.99) require more tolerance, especially for skewed distributions. Testing across different distributions shows best performance with bounded distributions like Beta (2.8% error) and uniform distributions, good performance with normal distributions (13% error), and acceptable performance with heavy-tailed distributions like Pareto (19% error). These error rates are well within theoretical tolerances (25-35% * sqrt(n)/log(n)) and are impressive for a streaming algorithm that maintains constant memory usage while providing real-time updates without storing historical data.
+Accuracy varies by distribution type and quantile level, for example lower quantiles (0.25, 0.75) show strong accuracy, while extreme quantiles (0.90-0.99) require more tolerance, especially for skewed distributions.
 
 **Comparison between PyQuantile and T-Digest streaming library:**
 
