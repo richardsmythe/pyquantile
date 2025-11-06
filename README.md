@@ -8,7 +8,7 @@ Accuracy varies by distribution type and quantile level, for example lower quant
 
 **Comparison between PyQuantile and T-Digest streaming library:**
 
-With quantiles 0.25 to 0.99 and chunks 100,1000,10000.
+With quantiles 0.25 to 0.99 and chunks 100,1000,10000 etc.
 
 Performance:
 
