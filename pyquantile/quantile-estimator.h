@@ -1,29 +1,32 @@
 #pragma once
 #include <tuple>
 #include <vector>
+#include <limits>
 
 class QuantileEstimator {
 public:
-    QuantileEstimator(double p);
+    explicit QuantileEstimator(double p);
     void Add(double s);
     double GetQuantile() const;
     std::tuple<double, double, double, double, double> GetCurrentMarkers() const;
 
 private:
-    double p;
-    int N = 0;
-    double Q0, Q1, Q2, Q3, Q4;
-    double pos0 = 1, pos1 = 2, pos2 = 3, pos3 = 4, pos4 = 5;
-    double desPos0, desPos1, desPos2, desPos3, desPos4;
-    double inc0, inc1, inc2, inc3, inc4;
-    bool debugMode = false;
-    int debugInterval = 1000;
     void SetIncrements(double p);
     void SortMarkers();
     void ValidateMarkerPositions();
+    void UpdateMarkers(double s);
     void AdjustMarkers();
     double CalculateParabolicValue(
         double markerPrev, double markerCurrent, double markerNext,
         double posPrev, double posCurrent, double posNext, double delta);
-    void UpdateMarkers(double s);
+
+    static constexpr double EPSILON = std::numeric_limits<double>::epsilon() * 100;
+
+    double p;
+    int N = 0;
+    double Q0 = 0, Q1 = 0, Q2 = 0, Q3 = 0, Q4 = 0;
+    double pos0 = 0, pos1 = 1, pos2 = 2, pos3 = 3, pos4 = 4;
+    double desPos0 = 0, desPos1 = 1, desPos2 = 2, desPos3 = 3, desPos4 = 4;
+    double inc0 = 0, inc1 = 0, inc2 = 0, inc3 = 0, inc4 = 0;
+
 };
