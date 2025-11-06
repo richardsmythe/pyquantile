@@ -37,6 +37,22 @@ Generally, all estimates seem to stabilize after the initial few seconds. The pl
 - Normal's error is ~13% of the true value
 - Pareto's error is ~19% of the true value
 
+**Compared with T-Digest Python streaming library:**
+
+Performance:
+
+- PyQuantile 0.1.9 maintains excellent speed performance, consistently running in ~3-4ms across all distributions
+- T-Digest still takes significantly longer at ~180-210ms
+- The speed advantage of PyQuantile over T-Digest remains around 50-60x faster
+
+Accuracy by Distribution:
+
+- Normal Distribution: PyQuantile shows better error (72.57) compared to T-Digest (425.75)
+- Uniform Distribution: PyQuantile performs extremely well with error of 17.74
+- Exponential Distribution: T-Digest shows better accuracy (3.73 vs 103.26)
+- Bimodal Distribution: PyQuantile shows moderate advantage (234.90 vs 320.82)
+- Pareto Distribution: T-Digest shows better handling of heavy tails (7.59 vs 1396.87)
+
 ## Installation
 
 You can install PyQuantile via pip:
