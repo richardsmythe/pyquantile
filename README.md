@@ -1,8 +1,16 @@
 # PyQuantile
 
-PyQuantile is a Python library that provides a fast quantile estimator for streamed data. It dynamically estimates the p-th quantile of a stream of incoming data points without storing them. Based on p-Squared algorithm for adjusting and updating markers.
+Pyquantile's main goal is to estimate a given quantile, with next to no overhead, on streaming data. The idea is that it must satisfy these conditions:
 
-PyQuantile demonstrates good performance characteristics for streaming quantile estimation. Memory usage remains constant (O(1)) regardless of data volume, using only about 2 MiB of base memory with no growth even after processing millions of values. Processing speed is impressive at 1.2-2.0 million values per second with consistent sub-millisecond latency (0.001-0.002ms per operation).
+- Provide extremely fast estimation for streaming data, suitable for real-time analytics and large-scale applications.
+- Low overhead regardless of the size of the data stream, with minimal CPU usage per update.
+- Optimized for maximum throughput and minimize latency.
+- Achieve strong accuracy for most quantiles and distributions, with error rates that are acceptable for real-world use cases.
+- Incoming datapoints in the stream cannot be stored, making the estimator ideal for environments with strict memory or privacy constraints.
+
+PyQuantile is a modified implementation of the P² algorithm, while retaining the original algorithm’s efficiency and low overhead. It dynamically estimates the p-th quantile of a stream of incoming data points without storing them by maintaining just a few markers and adjusting them as the data comes in.
+
+So far PyQuantile demonstrates good performance characteristics for streaming quantile estimation. Memory usage remains constant (O(1)) regardless of data volume, using only about 2 MiB of base memory with no growth even after processing millions of values. Processing speed is impressive at 1.2-2.0 million values per second with consistent sub-millisecond latency (0.001-0.002ms per operation).
 
 Accuracy varies by distribution type and quantile level, for example lower quantiles (0.25, 0.75) show strong accuracy, while extreme quantiles (0.90-0.99) require more tolerance, especially for skewed distributions.
 
