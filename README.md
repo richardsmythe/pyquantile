@@ -1,17 +1,36 @@
 # PyQuantile
 
-PyQuantile is a Python library that provides a fast quantile estimator for streamed data. It dynamically estimates the p-th quantile of a stream of incoming data points without storing them. Based on p-Squared algorithm for adjusting and updating markers. This project is a work in progress.
+Pyquantile's main goal is to estimate a given quantile, with next to no overhead, on streaming data. The idea is that it must satisfy these conditions:
 
-PyQuantile demonstrates good performance characteristics for streaming quantile estimation. Memory usage remains constant (O(1)) regardless of data volume, using only about 2 MiB of base memory with no growth even after processing millions of values. Processing speed is impressive at 1.2-2.0 million values per second with consistent sub-millisecond latency (0.001-0.002ms per operation).
+- Provide extremely fast estimation for streaming data, suitable for real-time analytics and large-scale applications.
+- Low overhead regardless of the size of the data stream, with minimal CPU usage per update.
+- Optimized for maximum throughput and minimize latency.
+- Achieve strong accuracy for most quantiles and distributions, with error rates that are acceptable for real-world use cases.
+- Incoming datapoints in the stream cannot be stored, making the estimator ideal for environments with strict memory or privacy constraints.
 
-Accuracy varies by distribution type and quantile level, for example lower quantiles (0.25, 0.75) show strong accuracy (7-23% error), while extreme quantiles (0.90-0.99) require more tolerance, especially for skewed distributions. Testing across different distributions shows best performance with bounded distributions like Beta (2.8% error) and uniform distributions, good performance with normal distributions (13% error), and acceptable performance with heavy-tailed distributions like Pareto (19% error). These error rates are well within theoretical tolerances (25-35% * sqrt(n)/log(n)) and are impressive for a streaming algorithm that maintains constant memory usage while providing real-time updates without storing historical data.
+PyQuantile is a modified implementation of the P² algorithm, while retaining the original algorithm’s efficiency and low overhead. It dynamically estimates the p-th quantile of a stream of incoming data points without storing them by maintaining just a few markers and adjusting them as the data comes in.
 
-- Small initial memory allocation (~2 MiB)
-- Handles millions of values with minimal memory impact
-- Memory usage is O(1) - constant space complexity
-- Perfect for long-running applications or large data streams
-- No memory leaking, memory does not grow over time
-- No memory accumulation with more data
+So far PyQuantile demonstrates good performance characteristics for streaming quantile estimation. Memory usage remains constant (O(1)) regardless of data volume, using only about 2 MiB of base memory with no growth even after processing millions of values. Processing speed is impressive at 1.2-2.0 million values per second with consistent sub-millisecond latency (0.001-0.002ms per operation).
+
+Accuracy varies by distribution type and quantile level, for example lower quantiles (0.25, 0.75) show strong accuracy, while extreme quantiles (0.90-0.99) require more tolerance, especially for skewed distributions.
+
+**Comparison between PyQuantile and T-Digest streaming library:**
+
+With quantiles 0.25 to 0.99 and chunks 100,1000,10000 etc.
+
+Performance:
+
+- PyQuantile 0.1.9 maintains excellent speed performance, consistently running in ~3-4ms across all distributions
+- T-Digest still takes significantly longer at ~180-210ms
+- The speed advantage of PyQuantile over T-Digest remains around 50-60x faster
+
+Accuracy by Distribution:
+
+- Normal Distribution: PyQuantile shows better error (72.57) compared to T-Digest (425.75)
+- Uniform Distribution: PyQuantile performs extremely well with error of 17.74
+- Exponential Distribution: T-Digest shows better accuracy (3.73 vs 103.26)
+- Bimodal Distribution: PyQuantile shows moderate advantage (234.90 vs 320.82)
+- Pareto Distribution: T-Digest shows better handling of heavy tails (7.59 vs 1396.87)
   
 ## Performance
 - Initial memory allocation only ~2.0 MiB, which is a one-time cost
@@ -32,10 +51,6 @@ Accuracy will always fluctuate for streaming algorithms. These are estimates bas
 Generally, all estimates seem to stabilize after the initial few seconds. The plot below compares Beta, Normal and Pareto distributions. Predictably a heavy tailed distribution like Pareto has more error than the others. 
 
 <img width="3570" height="2066" alt="image" src="https://github.com/user-attachments/assets/de962d76-4302-4458-93f1-5664161777c0" />
-
-- Beta's error is ~2.8% of the true value
-- Normal's error is ~13% of the true value
-- Pareto's error is ~19% of the true value
 
 ## Installation
 
