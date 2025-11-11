@@ -2,6 +2,7 @@
 #include <tuple>
 #include <vector>
 #include <limits>
+#include <cmath>
 
 class QuantileEstimator {
 public:
@@ -23,10 +24,21 @@ private:
     static constexpr double EPSILON = std::numeric_limits<double>::epsilon() * 100;
 
     double p;
-    int N = 0;
+    long long N = 0;
+    
+    // Marker values
     double Q0 = 0, Q1 = 0, Q2 = 0, Q3 = 0, Q4 = 0;
+    
+    // Actual counts at each marker (number of values <= marker)
+    int n0 = 0, n1 = 1, n2 = 2, n3 = 3, n4 = 4;
+    
+    // Position tracking
     double pos0 = 0, pos1 = 1, pos2 = 2, pos3 = 3, pos4 = 4;
     double desPos0 = 0, desPos1 = 1, desPos2 = 2, desPos3 = 3, desPos4 = 4;
+    
+    // Increment values for position updates
     double inc0 = 0, inc1 = 0, inc2 = 0, inc3 = 0, inc4 = 0;
 
+    // Initial buffer
+    double initial_buffer[5];
 };
