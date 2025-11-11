@@ -12,18 +12,6 @@ PyQuantile is a modified implementation of the P² algorithm. It dynamically est
 
 So far PyQuantile demonstrates good performance characteristics for streaming quantile estimation. Memory usage remains constant (O(1)) regardless of data volume, using only about 2 MiB of base memory with no growth even after processing millions of values. Processing speed is impressive at 1.2-2.0 million values per second with consistent sub-millisecond latency (0.001-0.002ms per operation).
 
-**Comparison between PyQuantile and T-Digest streaming library:**
-
-With quantiles 0.1 to 0.99 and chunks 100,1000,10000 etc.
-
-| Distribution | PyQuantile Error | TDigest Error | PyQ Time (ms) | TD Time (ms) |
-|--------------|------------------|--------------|---------------|--------------|
-| bimodal      | 101.16           | 312.70       | 20.37         | 1065.58      |
-| exponential  | 160.45           | 6.58         | 21.63         | 1094.93      |
-| normal       | 167.70           | 85.49        | 19.03         | 1106.66      |
-| pareto       | 2472.72          | 5.57         | 19.88         | 1093.09      |
-| uniform      | 409.22           | 1844.36      | 24.76         | 1062.02      |
-
 - Initial memory allocation only ~2.0 MiB, which is a one-time cost
 - Different quantile values (0.25 to 0.99) uses the same memory
 - Processing 100 values: No additional memory
@@ -38,6 +26,11 @@ The graph below shows how PyQuantile gets more efficient with larger data sizes.
 PyQuantile is accurate for central quantiles but less reliable at the distribution tails. This is a common for streaming quantile estimators, which often struggle with extreme quantiles.
 
 <img width="991" height="584" alt="image" src="https://github.com/user-attachments/assets/1f1afd3e-478a-4ecb-8047-913f38671f4e" />
+
+PyQuantile is  adaptive, which is visible in the plots below. When the distribution suddenly shifts from N(0,1) to N(2,0.5) at t=10s, PyQuantile's blue line quickly tracks the new quantile value (jumping to ~2.5). To compare it with another estimator (albeit different) T-Digest's red line gradually drifts upward as it accumulates the new data with all historical observations. Similarly, during gradual concept drift (bottom-left plot), PyQuantile stays close to the current distribution's true quantile, maintaining a relatively constant offset, whereas T-Digest represents the aggregate quantile of all data seen so far, causing it to lag behind the actual current quantile. This makes PyQuantile ideal for non-stationary data streams where recent observations are more relevant than historical ones.
+
+<img width="1899" height="1009" alt="image" src="https://github.com/user-attachments/assets/e779b11d-55d3-47dc-8ae5-59a4c49830a5" />
+
 
 
 ## Installation
