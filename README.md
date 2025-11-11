@@ -35,7 +35,7 @@ With quantiles 0.1 to 0.99 and chunks 100,1000,10000 etc.
 The graph below shows how PyQuantile gets more efficient with larger data sizes. Peak performance reaches about 2 million values per second at the largest data size. The latency is generally very stable regardless of the data size.
 <img width="1190" height="488" alt="image" src="https://github.com/user-attachments/assets/46f97a5f-7e44-41fb-bd25-c8c82a417536" />
 
-PyQuantile is accurate for central quantiles but less reliable at the distribution tails. This is a common behavior for streaming quantile estimators, which often struggle with extreme quantiles.
+PyQuantile is accurate for central quantiles but less reliable at the distribution tails. This is a common for streaming quantile estimators, which often struggle with extreme quantiles.
 
 <img width="991" height="584" alt="image" src="https://github.com/user-attachments/assets/1f1afd3e-478a-4ecb-8047-913f38671f4e" />
 
