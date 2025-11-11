@@ -35,13 +35,10 @@ With quantiles 0.1 to 0.99 and chunks 100,1000,10000 etc.
 The graph below shows how PyQuantile gets more efficient with larger data sizes. Peak performance reaches about 2 million values per second at the largest data size. The latency is generally very stable regardless of the data size.
 <img width="1190" height="488" alt="image" src="https://github.com/user-attachments/assets/46f97a5f-7e44-41fb-bd25-c8c82a417536" />
 
-Accuracy will always fluctuate for streaming algorithms. These are estimates based on changing data with no known size, and accuracy depends heavily on the characteristics of the data. In my tests, the best results tend to be with uniform and beta distributions. Individual quantiles also show varying accuracy with best results up to 0.75. 
+PyQuantile is accurate for central quantiles but less reliable at the distribution tails. This is a common behavior for streaming quantile estimators, which often struggle with extreme quantiles.
 
-<img width="1489" height="989" alt="all_quantiles_comparison" src="https://github.com/user-attachments/assets/1ea25998-1e54-44fa-a15c-2c88525807a3" />
+<img width="991" height="584" alt="image" src="https://github.com/user-attachments/assets/1f1afd3e-478a-4ecb-8047-913f38671f4e" />
 
-Generally, all estimates seem to stabilize after the initial few seconds. The plot below compares Beta, Normal and Pareto distributions. Predictably a heavy tailed distribution like Pareto has more error than the others. 
-
-<img width="3570" height="2066" alt="image" src="https://github.com/user-attachments/assets/de962d76-4302-4458-93f1-5664161777c0" />
 
 ## Installation
 
