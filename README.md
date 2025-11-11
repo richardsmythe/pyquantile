@@ -8,31 +8,22 @@ Pyquantile's main goal is to estimate a given quantile, with next to no overhead
 - Achieve strong accuracy for most quantiles and distributions, with error rates that are acceptable for real-world use cases.
 - Incoming datapoints in the stream cannot be stored, making the estimator ideal for environments with strict memory or privacy constraints.
 
-PyQuantile is a modified implementation of the P² algorithm, while retaining the original algorithm’s efficiency and low overhead. It dynamically estimates the p-th quantile of a stream of incoming data points without storing them by maintaining just a few markers and adjusting them as the data comes in.
+PyQuantile is a modified implementation of the P² algorithm. It dynamically estimates the p-th quantile of a stream of incoming data points without storing them, maintaining just a few markers and adjusting them as the data comes in.
 
 So far PyQuantile demonstrates good performance characteristics for streaming quantile estimation. Memory usage remains constant (O(1)) regardless of data volume, using only about 2 MiB of base memory with no growth even after processing millions of values. Processing speed is impressive at 1.2-2.0 million values per second with consistent sub-millisecond latency (0.001-0.002ms per operation).
 
-Accuracy varies by distribution type and quantile level, for example lower quantiles (0.25, 0.75) show strong accuracy, while extreme quantiles (0.90-0.99) require more tolerance, especially for skewed distributions.
-
 **Comparison between PyQuantile and T-Digest streaming library:**
 
-With quantiles 0.25 to 0.99 and chunks 100,1000,10000 etc.
+With quantiles 0.1 to 0.99 and chunks 100,1000,10000 etc.
 
-Performance:
+| Distribution | PyQuantile Error | TDigest Error | PyQ Time (ms) | TD Time (ms) |
+|--------------|------------------|--------------|---------------|--------------|
+| bimodal      | 101.16           | 312.70       | 20.37         | 1065.58      |
+| exponential  | 160.45           | 6.58         | 21.63         | 1094.93      |
+| normal       | 167.70           | 85.49        | 19.03         | 1106.66      |
+| pareto       | 2472.72          | 5.57         | 19.88         | 1093.09      |
+| uniform      | 409.22           | 1844.36      | 24.76         | 1062.02      |
 
-- PyQuantile 0.1.9 maintains excellent speed performance, consistently running in ~3-4ms across all distributions
-- T-Digest still takes significantly longer at ~180-210ms
-- The speed advantage of PyQuantile over T-Digest remains around 50-60x faster
-
-Accuracy by Distribution:
-
-- Normal Distribution: PyQuantile shows better error (72.57) compared to T-Digest (425.75)
-- Uniform Distribution: PyQuantile performs extremely well with error of 17.74
-- Exponential Distribution: T-Digest shows better accuracy (3.73 vs 103.26)
-- Bimodal Distribution: PyQuantile shows moderate advantage (234.90 vs 320.82)
-- Pareto Distribution: T-Digest shows better handling of heavy tails (7.59 vs 1396.87)
-  
-## Performance
 - Initial memory allocation only ~2.0 MiB, which is a one-time cost
 - Different quantile values (0.25 to 0.99) uses the same memory
 - Processing 100 values: No additional memory
@@ -41,7 +32,7 @@ Accuracy by Distribution:
 - Processing 100,000 values: No additional memory
 - Processing 1,000,000 values: Only 0.13 MiB increase
 
-The graph below shows how PyQuantile actually gets more efficient with larger data sizes. Peak performance reaches about 2 million values per second at the largest data size. The latency is generally very stable regardless of the data size.
+The graph below shows how PyQuantile gets more efficient with larger data sizes. Peak performance reaches about 2 million values per second at the largest data size. The latency is generally very stable regardless of the data size.
 <img width="1190" height="488" alt="image" src="https://github.com/user-attachments/assets/46f97a5f-7e44-41fb-bd25-c8c82a417536" />
 
 Accuracy will always fluctuate for streaming algorithms. These are estimates based on changing data with no known size, and accuracy depends heavily on the characteristics of the data. In my tests, the best results tend to be with uniform and beta distributions. Individual quantiles also show varying accuracy with best results up to 0.75. 
