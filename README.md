@@ -1,4 +1,4 @@
-# PyQuantile
+<img width="1388" height="791" alt="image" src="https://github.com/user-attachments/assets/ea3e9fa2-c982-4ae9-909e-d698815de941" /># PyQuantile
 
 Pyquantile's main goal is to estimate a given quantile, with next to no overhead, on streaming data. The idea is that it must satisfy these conditions:
 
@@ -31,22 +31,37 @@ PyQuantile demonstrates typical P² performance characteristics for streaming qu
 | Exponential (0.95) | 8.54% | 16.15% | **PyQuantile (47% better)** |
 | Log-Normal (0.99) | 45.84% | 59.88% | **PyQuantile (23% better)** |
 
-PyQuantile more consistent in very early stages, especially dramatic on skewed distributions.
+PyQuantile is more stable and consistent in early stages, especially dramatic on skewed distributions. Traditional P² can be unstable with limited samples. 
 
 <img width="1388" height="791" alt="image" src="https://github.com/user-attachments/assets/023dc1c0-aef0-4ebc-bb9b-b25eb08cd5d7" />
 
-
 ### Early Stage (100 < N ≤ 1000)
-
 Results are mixed - both approaches have converged significantly, with differences becoming less pronounced.
 
 ### Late Stage (N > 10,000)
-
 Both approaches achieve excellent accuracy (<1%), proving both converge well.
 
 ### Final Accuracy (N = 50,000)
-
 Virtually identical - both achieve 0.03-0.37% error.
+
+## PyQuantile vs Other Streaming Algorithms
+
+Running PyQuantile against t-digest and DDSketch, both of which use historical data, PyQuantile only maintains 5 markers at 40bytes and remains competitive with accuracy, but much faster. 
+
+### Performance Results (100,000 samples, q=0.95, Exponential Distribution)
+
+| Algorithm | Speed (samples/sec) | Final Error | Trade-off |
+|-----------|---------------------|-------------|-----------|
+| **PyQuantile** | **1,241K/sec** | **0.11%** | **Best balance** |
+| t-digest | 37K/sec | 0.01% | Slow but most accurate |
+| DDSketch | 684K/sec | 0.10% | Good balance, but slower than PyQuantile |
+
+
+- PyQuantile stores no historical data, only 5 markers (40 bytes)
+- PyQuantile Achieves <0.2% error without historical data 
+- t-digest keeps centroids, DDSketch keeps buckets  
+- PyQuantile is 2x faster than DDSketch, 34x faster than t-digest  
+- PyQuantile is O(1) space complexity vs O(log n) or O(√n) for others
 
 ## Installation
 
