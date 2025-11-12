@@ -1,4 +1,4 @@
-#PyQuantile
+# PyQuantile
 
 Pyquantile's main goal is to estimate a given quantile, with next to no overhead, on streaming data. The idea is that it must satisfy these conditions:
 
