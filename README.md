@@ -1,14 +1,16 @@
 # PyQuantile
 
-Pyquantile's main goal is to estimate a given quantile, with next to no overhead, on streaming data. The idea is that it must satisfy these conditions:
+PyQuantile is a modified implementation of the P² algorithm. It uses an N-Dependent Hybrid approach, that smoothly transitions the quantile marker adjustment from the stable linear estimate (when the sample count N is small, stabilizing initial convergence) to the highly accurate Parabolic P² Interpolation (when N exceeds a specified threshold, maximizing long-term accuracy). The rationale for blending interpolations is to leverage the stability of linear interpolation for small datasets, while transitioning to the higher asymptotic accuracy of parabolic interpolation as the sample size grows larger.
 
+PyQuantile's main goals:
+
+- Handle smaller datasets, remaining more stable compared with the traditional P² algorithm. 
 - Provide extremely fast estimation for streaming data, suitable for real-time analytics and large-scale applications.
 - Low overhead regardless of the size of the data stream, with minimal CPU usage per update.
-- Optimized for maximum throughput and minimize latency.
 - Achieve strong accuracy for most quantiles and distributions, with error rates that are acceptable for real-world use cases.
 - Incoming datapoints in the stream cannot be stored, making the estimator ideal for environments with strict memory or privacy constraints.
 
-PyQuantile is a modified implementation of the P² algorithm. It uses an N-Dependent Hybrid approach, that smoothly transitions the quantile marker adjustment from the stable linear estimate (when the sample count N is small, stabilizing initial convergence) to the highly accurate Parabolic P² Interpolation (when N exceeds a specified threshold, maximizing long-term accuracy). The rationale for blending interpolations is to leverage the stability of linear for small datasets while transitioning to the higher asymptotic accuracy of parabolic interpolation as the sample size grows.
+
 
 PyQuantile demonstrates typical P² performance characteristics for streaming quantile estimation. Memory usage remains constant (O(1)) regardless of data volume, using very small MiB of base memory with no growth even after processing millions of values. Processing speed is impressive at 1.2-2.0 million values per second with consistent sub-millisecond latency (0.001-0.002ms per operation).
 
