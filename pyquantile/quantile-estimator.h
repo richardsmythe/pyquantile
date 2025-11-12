@@ -1,7 +1,6 @@
 #pragma once
-#include <tuple>
 #include <vector>
-#include <limits>
+#include <tuple>
 #include <cmath>
 
 class QuantileEstimator {
@@ -13,22 +12,20 @@ public:
 
 private:
     void SetIncrements(double p);
-    void SortMarkers();
-    void ValidateMarkerPositions();
     void UpdateMarkers(double s);
     void AdjustMarkers();
-    double CalculateParabolicValue(
-        double markerPrev, double markerCurrent, double markerNext,
-        double posPrev, double posCurrent, double posNext, double delta);
 
-    static constexpr double EPSILON = std::numeric_limits<double>::epsilon() * 100;
+    double CalculateParabolicValue(double markerPrev, double markerCurrent, double markerNext,double posPrev, double posCurrent, double posNext, double d);
+    double CalculateLinearValue(double markerPrev, double markerCurrent, double markerNext,double posPrev, double posCurrent, double posNext, double d);
 
+    int N = 0;
     double p;
-    long long N = 0;
-    double Q0 = 0, Q1 = 0, Q2 = 0, Q3 = 0, Q4 = 0;
-    int n0 = 0, n1 = 1, n2 = 2, n3 = 3, n4 = 4;
-    double pos0 = 0, pos1 = 1, pos2 = 2, pos3 = 3, pos4 = 4;
-    double desPos0 = 0, desPos1 = 1, desPos2 = 2, desPos3 = 3, desPos4 = 4;
-    double inc0 = 0, inc1 = 0, inc2 = 0, inc3 = 0, inc4 = 0;
-    double initial_buffer[5];
+    std::vector<double> initialValues;
+    double Q0 = 0.0, Q1 = 0.0, Q2 = 0.0, Q3 = 0.0, Q4 = 0.0;
+    double pos0 = 1.0, pos1 = 2.0, pos2 = 3.0, pos3 = 4.0, pos4 = 5.0;
+    double desPos0 = 1.0, desPos1 = 2.0, desPos2 = 3.0, desPos3 = 4.0, desPos4 = 5.0;
+    double inc0 = 0.0, inc1 = 0.0, inc2 = 0.0, inc3 = 0.0, inc4 = 0.0;
+
+    // N-Dependent constant used as a limit to transition from linear to parabolic
+    const double N_THRESHOLD = 500.0; 
 };
