@@ -1,5 +1,3 @@
-<img width="1388" height="791" alt="image" src="https://github.com/user-attachments/assets/ea3e9fa2-c982-4ae9-909e-d698815de941" /># PyQuantile
-
 Pyquantile's main goal is to estimate a given quantile, with next to no overhead, on streaming data. The idea is that it must satisfy these conditions:
 
 - Provide extremely fast estimation for streaming data, suitable for real-time analytics and large-scale applications.
